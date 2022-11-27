@@ -5,6 +5,7 @@ from getpass import getpass
 
 
 def main():
+    schema = "olympicarchery"
     user = input("Username: ")
     password = getpass("Password: ")
     valid_credentials = True
