@@ -12,3 +12,14 @@ def validateCredentials(username, pword) -> bool:
         else:
             raise error
     return True
+
+def validateOperation(option):
+    operations = ["a","b","c","d","e","f","g"]
+    if option.lower() in operations:
+        return True
+    return False
+    
+
+
+    
+
