@@ -8,7 +8,7 @@ def main():
     schema = "olympicarchery"
     user = input("Username: ")
     password = getpass("Password: ")
-    valid_credentials = True
+    valid_credentials = validateCredentials(user, password)
 
     while not valid_credentials:
         user = input("Username: ")
@@ -25,11 +25,13 @@ def main():
             "a.\tInsert\nb.\tDelete\nc.\tUpdate\nd.\tCreate Table\ne.\t Create view\nf.\tAlter\ng.\tQuery\nh.\tEXIT\nEnter letter to choose operation: ")
         valid_operation = validateOperation(option)
 
-    if valid_operation == "a":
-        tables = QueryBuilder(user, password, schema, 'country').getTableNames
+    if option == "a":
+        tables = QueryBuilder(user, password, schema, 'country').getTableNames()
         print(f"Tables in {schema}: {tables}")
-        table_name = input("Table you want to insert data to:")
-    """
+        table_name = input("Table you want to insert data to: ")
+        obj = QueryBuilder(user, password, schema, table_name)
+        column_info = obj.columnInfo()
+        print(column_info)
     
     
     
@@ -37,8 +39,6 @@ def main():
     
     
     
-    
-    """
     if option == "b":
         table_name = input("Table to delete from: ")
         valid_tablename = validateTable(table_name)
