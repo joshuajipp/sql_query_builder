@@ -22,8 +22,10 @@ def validateOperation(option):
     
 def validateTable(username, password, schema, table_name):
     obj = QueryBuilder(username, password, schema, table_name)
+    table_names = obj.getTableNames
     if table_name in table_names:
-            new_data = obj.delete(table_name, condition)
-    else 
+        return True
+    return False
     
-
+def validateCondition():
+    if 

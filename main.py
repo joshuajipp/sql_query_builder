@@ -39,12 +39,12 @@ def main():
     
     
     """
-    if valid_operation == "b":
+    if option == "b":
         table_name = input("Table to delete from: ")
-    
-    
+        valid_tablename = validateTable(table_name)
         condition = input("Please enter the condition (for example: The condition is the Olympic ID number from the athlete table): ")
-        
+        #valid_condition  = validateCondition(condition)
+        valid_condition = True
             
 
 
@@ -54,7 +54,7 @@ def main():
     
     
     
-    if valid_operation == "c":
+    if option == "c":
         table_name = input("Table to update: ")
         """
     
@@ -66,14 +66,13 @@ def main():
     
     
     """
-    if valid_operation == "d":
+    if option == "d":
         table_name = input("Table name: ")
         num_attributes = int(input("Enter the number of attributes: "))
         i = 0
-        while i < num_attributes:
+        #while i < num_attributes:
             # ask for attribute name
             # data type
-        """
     
     
     
@@ -82,8 +81,9 @@ def main():
     
     
     
-        """
-    if valid_operation == "e":
+    
+        
+    if option == "e":
         table_name = input("Table ")
     """
     
@@ -95,7 +95,7 @@ def main():
     
     
     """
-    if valid_operation == "f":
+    if option == "f":
         table_name = input("Table ")
         """
     
@@ -108,7 +108,7 @@ def main():
     
     """
 
-    if valid_operation == "g":
+    if option == "g":
         table_name = input("Table ")
         """
 
@@ -121,7 +121,7 @@ def main():
 
     """
 
-    if valid_operation == "h":
+    if option == "h":
         exit()
 
 
