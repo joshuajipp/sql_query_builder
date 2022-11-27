@@ -11,7 +11,7 @@ class QueryBuilder():
         except Exception as error:
             if f"Unknown database '{db}'" in str(error):
                 raise ValueError("Must enter valid database")
-                
+
             elif f"Table '{db}.{table}' doesn't exist" in str(error):
                 raise ValueError("Invalid table name")
             else:
@@ -22,7 +22,6 @@ class QueryBuilder():
     def insert(self, rows):
         tmp = self.data.cursor(buffered=True)
         tmp.execute(f"INSERT INTO {self.table} VALUES {rows}")
-        
 
     def delete(self, condition):
         tmp = self.data.cursor(buffered=True)
@@ -73,3 +72,8 @@ class QueryBuilder():
         column_nullable_dict = {i[0]: i[6] for i in tmp.description}
 
         return column_nullable_dict
+
+    def getTableNames(self):
+        tmp = self.data.cursor(buffered=True)
+        tmp.execute("SHOW TABLES")
+        return [x[0] for x in tmp]
