@@ -15,7 +15,7 @@ def main():
         valid_credentials = validateCredentials(user, password)
 
     option = input(
-        "a.\tInsert\nb.\tDelete\nc.\tUpdate\nd.\tCreate Table\ne.\t Create view\nf.\tAlter\ng.\tQuery\nEnter letter to choose operation: ")
+        "a.\tInsert\nb.\tDelete\nc.\tUpdate\nd.\tCreate Table\ne.\t Create view\nf.\tAlter\ng.\tQuery\nh.\tEXIT\nEnter letter to choose operation: ")
     
     valid_operation = validateOperation(option)
 
@@ -28,13 +28,18 @@ def main():
         table_name = input("Table you want to insert data to:")
 
     if valid_operation == "b":
-        table_name = input("Table ")
+        table_name = input("Table to delete from: ")
     
     if valid_operation == "c":
-        table_name = input("Table ")
+        table_name = input("Table to update: ")
     
     if valid_operation == "d":
-        table_name = input("Table ")
+        table_name = input("Table name: ")
+        num_attributes = int(input("Enter the number of attributes: "))
+        i = 0
+        while i < num_attributes:
+            #ask for attribute name
+            #data type
     
     if valid_operation == "e":
         table_name = input("Table ")
