@@ -1,4 +1,5 @@
 import mysql.connector
+from queryClass import *
 
 
 def validateCredentials(username, pword) -> bool:
@@ -19,7 +20,10 @@ def validateOperation(option):
         return True
     return False
     
-
-
+def validateTable(username, password, schema, table_name):
+    obj = QueryBuilder(username, password, schema, table_name)
+    if table_name in table_names:
+            new_data = obj.delete(table_name, condition)
+    else 
     
 
