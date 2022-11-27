@@ -41,7 +41,12 @@ def main():
     """
     if valid_operation == "b":
         table_name = input("Table to delete from: ")
-        """
+        
+        obj = QueryBuilder(user, password, schema, table_name)
+        condition = input("Please enter the condition (for example: The condition is the Olympic ID number from the athlete table): ")
+        table_names = obj.getTableNames(table_name)
+        if table_name in table_names:
+            new_table = obj.delete(table_name, condition)
     
     
     
@@ -50,7 +55,6 @@ def main():
     
     
     
-    """
     if valid_operation == "c":
         table_name = input("Table to update: ")
         """
