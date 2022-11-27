@@ -11,7 +11,7 @@ class QueryBuilder():
         except Exception as error:
             if f"Unknown database '{db}'" in str(error):
                 raise ValueError("Must enter valid database")
-                # raise ValueError("Invalid database")
+                
             elif f"Table '{db}.{table}' doesn't exist" in str(error):
                 raise ValueError("Invalid table name")
             else:
@@ -19,8 +19,10 @@ class QueryBuilder():
 
         self.table = table
 
-    def insert(self):
-        pass
+    def insert(self, rows):
+        tmp = self.data.cursor(buffered=True)
+        tmp.execute(f"INSERT INTO {self.table} VALUES {rows}")
+        
 
     def delete(self, condition):
         tmp = self.data.cursor(buffered=True)
