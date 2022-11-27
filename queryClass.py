@@ -36,7 +36,7 @@ class QueryBuilder():
     def addModify(self, action, column_name, data_type):
         tmp = self.data.cursor(buffered=True)
 
-        col_info = self.__columnInfo()
+        col_info = self.columnInfo()
 
         if action.lower() == "modify":
             if not (column_name in col_info):
@@ -48,7 +48,7 @@ class QueryBuilder():
 
     def drop(self, column_name):
         tmp = self.data.cursor(buffered=True)
-        col_info = self.__columnInfo()
+        col_info = self.columnInfo()
 
         if not (column_name in col_info):
             raise ValueError("Invalid column name")
@@ -66,12 +66,12 @@ class QueryBuilder():
             select_str += f"ORDER BY {order_by}"
         tmp.execute(select_str)
 
-    def __columnInfo(self):
+    def columnInfo(self):
         tmp = self.data.cursor(buffered=True)
         tmp.execute(f"SELECT * FROM {self.table}")
-        column_nullable_dict = {i[0]: i[6] for i in tmp.description}
+        column_info = [[i[0], i[1], i[6]] for i in tmp.description]
 
-        return column_nullable_dict
+        return column_info
 
     def getTableNames(self):
         tmp = self.data.cursor(buffered=True)
