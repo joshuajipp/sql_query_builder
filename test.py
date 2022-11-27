@@ -14,3 +14,5 @@ obj.drop("AllTimeDubs")
 # columns = [i[0] for i in cur.description]
 
 # obj = QueryBuilder(cnx, table)
+
+
