@@ -29,13 +29,40 @@ def main():
         tables = QueryBuilder(user, password, schema, 'country').getTableNames
         print(f"Tables in {schema}: {tables}")
         table_name = input("Table you want to insert data to:")
-
+    """
+    
+    
+    
+    
+    
+    
+    
+    
+    """
     if valid_operation == "b":
         table_name = input("Table to delete from: ")
-
+        """
+    
+    
+    
+    
+    
+    
+    
+    
+    """
     if valid_operation == "c":
         table_name = input("Table to update: ")
-
+        """
+    
+    
+    
+    
+    
+    
+    
+    
+    """
     if valid_operation == "d":
         table_name = input("Table name: ")
         num_attributes = int(input("Enter the number of attributes: "))
@@ -43,15 +70,53 @@ def main():
         while i < num_attributes:
             # ask for attribute name
             # data type
-
+        """
+    
+    
+    
+    
+    
+    
+    
+    
+    """
     if valid_operation == "e":
         table_name = input("Table ")
-
+    """
+    
+    
+    
+    
+    
+    
+    
+    
+    """
     if valid_operation == "f":
         table_name = input("Table ")
+        """
+    
+    
+    
+    
+    
+    
+    
+    
+    """
 
     if valid_operation == "g":
         table_name = input("Table ")
+        """
+
+
+
+
+
+
+
+
+    """
 
     if valid_operation == "h":
         exit()
