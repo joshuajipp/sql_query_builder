@@ -33,43 +33,117 @@ def main():
             option = input(
                 "\na.\tInsert\nb.\tDelete\nc.\tUpdate\nd.\tCreate Table\ne.\t Create view\nf.\tAlter\ng.\tQuery\nh.\tEXIT\nEnter letter to choose operation: ")
             valid_operation = validateOperation(option)
-
+        option = option.lower()
         if option == "a":
             print(f"Tables in {schema}: {tables}")
             table_name = input("Table you want to insert data to: ")
             if validateTable(table_name, tables):
                 obj = QueryBuilder(user, password, schema, table_name)
                 column_info = obj.columnInfo()
+                insert_info = []
                 for i in column_info:
-                    print(f'\nInserting into column "{i[0]}"...')
+                    if i[2] == 0:
+                        print("\n**REQUIRED FIELD**")
+                    print(f'Inserting into column "{i[0]}"...')
                     col_inp = input(f"{datatype_dict[i[1]]}")
 
                     if validateColumnInput(col_inp, i) != True:
                         print(validateColumnInput(col_inp, i))
                         break
+                    if col_inp == '':
+                        col_inp = None
+                    insert_info.append(col_inp)
+                obj.insert(tuple(insert_info))
             else:
                 print("Invalid table name.")
 
         if option == "b":
-            table_name = input("Table to delete from: ")
-            valid_tablename = validateTable(table_name)
-            condition = input(
-                "Please enter the condition (for example: The condition is the Olympic ID number from the athlete table): ")
-            #valid_condition  = validateCondition(condition)
-            valid_condition = True
+            print(f"Tables in {schema}: {tables}")
+            table_name = input("Enter table to delete from: ")
+            if validateTable(table_name, tables):
+                obj = QueryBuilder(user, password, schema, table_name)
+                column_info = obj.columnInfo()
+                print(
+                    f"\nList of columns in {table_name}: {[x[0] for x in column_info]}")
+                condition = input(
+                    "Enter a WHERE condition in the form: ColumnName = 'Column Value'\n")
+                if (condition.split(' '))[0] in [x[0] for x in column_info]:
+
+                    obj.delete(condition)
+                else:
+                    print(
+                        f"{condition.split(' ')[0]} is not a valid column in {table_name}")
+
+            else:
+                print("Invalid table name.")
 
         if option == "c":
-            table_name = input("Table to update: ")
-            """
-    
-    
-    
-    
-    
-    
-    
-    
-        """
+            print(f"Tables in {schema}: {tables}")
+            table_name = input("Enter table to update: ")
+            if validateTable(table_name, tables):
+                obj = QueryBuilder(user, password, schema, table_name)
+                column_info = obj.columnInfo()
+                set_list = []
+
+                for i in column_info:
+                    toggle = input(
+                        f'\nEnter "Y" to set value of column "{i[0]}", or enter anything else to skip: ')
+                    if toggle.lower() == 'y':
+                        tmp_str = ""
+                        if i[2] == 0:
+                            print("\n**REQUIRED FIELD**")
+                        print(f'Updating values in column "{i[0]}"...')
+                        col_inp = input(f"{datatype_dict[i[1]]}")
+
+                        if validateColumnInput(col_inp, i) != True:
+                            print(validateColumnInput(col_inp, i))
+                            break
+
+                        if col_inp != "":
+                            tmp_str = f"{i[0]} = '{col_inp}'"
+                        else:
+                            tmp_str = f"{i[0]} = NULL"
+                        set_list.append(tmp_str)
+
+                print(
+                    f"\nList of columns in {table_name}: {[x[0] for x in column_info]}")
+                condition = input(
+                    "Enter a WHERE condition in the form: ColumnName = 'Column Value'\n")
+                if (condition.split(' '))[0] in [x[0] for x in column_info]:
+                    set_list = ", ".join(set_list)
+                    obj.update(set_list, condition)
+                    print(set_list)
+                    print(condition)
+                else:
+                    print(
+                        f"{condition.split(' ')[0]} is not a valid column in {table_name}")
+
+                # if len(update_columns) > 0:
+
+                #     for i in update_columns:
+                #         tmp_str = ""
+                #         if i[2] == 0:
+                #             print("\n**FIELD REQUIRED**")
+                #         print(f'Updating values in column "{i[0]}"...')
+                #         col_inp = input(f"{datatype_dict[i[1]]}")
+
+                #         if validateColumnInput(col_inp, i) != True:
+                #             print(validateColumnInput(col_inp, i))
+                #             break
+
+                #         if col_inp != "":
+                #             tmp_str = f'{i[0]} = {col_inp}'
+                #         else:
+                #             tmp_str = f"{i[0]} = 'NULL'"
+                #         set_list.append(tmp_str)
+                #     print(set_list)
+
+                # else:
+                #     print("You must select at least 1 column to update")
+
+            else:
+                print("Invalid table name.")
+
         if option == "d":
             table_name = input("Table name: ")
             num_attributes = int(input("Enter the number of attributes: "))
