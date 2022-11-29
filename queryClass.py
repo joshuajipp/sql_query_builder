@@ -39,7 +39,7 @@ class QueryBuilder():
         col_info = self.columnInfo()
 
         if action.lower() == "modify":
-            if not (column_name in col_info):
+            if not (column_name in [x[0] for x in col_info]):
                 raise ValueError("Invalid column name")
 
         tmp.execute(

@@ -91,17 +91,55 @@ def main():
     
         """
         if option == "f":
-            table_name = input("Table ")
-            """
-    
-    
-    
-    
-    
-    
-    
-    
-        """
+            option_dict = {
+                'a': "ADD",
+                'b': "MODIFY",
+                'c': "DROP"
+            }
+            data_type_dict = {
+                'a': "VARCHAR(200)",
+                'b': "INT(100)",
+                'c': "CHAR(1)"
+            }
+            print(f"Tables in {schema}: {tables}")
+            table_name = input("Table you want to alter: ")
+            if validateTable(table_name, tables):
+                obj = QueryBuilder(user, password, schema, table_name)
+                column_info = obj.columnInfo()
+                selection = input(
+                    "\na.\tADD\nb.\tMODIFY\nc.\tDROP\nEnter a letter to choose which ALTER option to use: ")
+                if selection.lower() in ['a', 'b', 'c']:
+                    selection = option_dict[(selection.lower())]
+                    if selection != "ADD":
+                        print(
+                            f"List of columns in {table_name}: {[x[0] for x in column_info]}")
+                    column_name = input(
+                        f"Enter the name of the column you want to {selection}: ")
+                    if ((selection in ["MODIFY", "DROP"]) and (column_name in [x[0] for x in column_info])) or (not (selection in ["MODIFY", "DROP"]) and not (column_name in [x[0] for x in column_info])):
+                        if selection in ["ADD", "MODIFY"]:
+                            data_type = input(
+                                f'\na.\tVARCHAR()\nb.\tINT()\nc.\tCHAR()\nEnter a letter to select data type for column "{column_name}": ')
+                            if data_type.lower() in ['a', 'b', 'c']:
+                                data_type = data_type_dict[data_type.lower()]
+                                obj.addModify(
+                                    selection, column_name, data_type)
+                            else:
+                                print("Invalid selection of data type.")
+                        else:
+                            obj.drop(column_name)
+                    else:
+                        if selection == "ADD":
+                            print(
+                                f'Column "{column_name}" is already in "{table_name}"')
+                        else:
+                            print(
+                                f'Column "{column_name}" does not exist in "{table_name}"')
+
+                else:
+                    print("Invalid ALTER option.")
+
+            else:
+                print("Invalid table name.")
 
         if option == "g":
             table_name = input("Table ")
