@@ -22,6 +22,7 @@ class QueryBuilder():
     def insert(self, rows):
         tmp = self.data.cursor(buffered=True)
         tmp.execute(f"INSERT INTO {self.table} VALUES {rows}")
+        self.data.commit()
 
     def delete(self, condition):
         tmp = self.data.cursor(buffered=True)
@@ -30,7 +31,7 @@ class QueryBuilder():
 
     def update(self, set, condition):
         tmp = self.data.cursor(buffered=True)
-        tmp.execute(f"UPDATE {self.table} SET {set} WHERE {condition}")
+        tmp.execute(f"UPDATE {self.table} SET {set} WHERE {condition};")
         self.data.commit()
 
     def addModify(self, action, column_name, data_type):
@@ -48,7 +49,7 @@ class QueryBuilder():
 
     def drop(self, column_name):
         tmp = self.data.cursor(buffered=True)
-        col_info = self.columnInfo()
+        col_info = [x[0] for x in self.columnInfo()]
 
         if not (column_name in col_info):
             raise ValueError("Invalid column name")
