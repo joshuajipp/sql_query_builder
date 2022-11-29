@@ -14,18 +14,33 @@ def validateCredentials(username, pword) -> bool:
             raise error
     return True
 
+
 def validateOperation(option):
-    operations = ["a","b","c","d","e","f","g"]
+    operations = ["a", "b", "c", "d", "e", "f", "g", "h"]
     if option.lower() in operations:
         return True
     return False
-    
-def validateTable(username, password, schema, table_name):
-    obj = QueryBuilder(username, password, schema, table_name)
-    table_names = obj.getTableNames
-    if table_name in table_names:
+
+
+def validateTable(table_name, tables_list):
+    if table_name.lower() in tables_list:
         return True
     return False
-    
-def validateCondition():
-    if 
+
+
+def validateColumnInput(inp, col_info):
+    if inp == '' and col_info[2] == 0:
+        return f'Column "{col_info[0]}" cannot be NULL'
+    if col_info[1] == 3 and inp != '':
+        try:
+            int(inp)
+        except ValueError:
+            return f'Column "{col_info[0]}" must be an integer'
+    if col_info[1] == 254 and len(inp) > 1:
+        return f'Column "{col_info[0]}" must not be more than 1 character'
+
+    return True
+
+
+# def validateCondition():
+#     if
