@@ -1,4 +1,3 @@
-import mysql.connector
 from queryClass import *
 from validate import *
 from getpass import getpass
@@ -23,6 +22,8 @@ def main():
         3: "Enter an integer value: "
     }
     while True:
+        tables = QueryBuilder(user, password, schema,
+                              'participant').getTableNames()
         option = input(
             "\na.\tInsert\nb.\tDelete\nc.\tUpdate\nd.\tCreate Table\ne.\t Create view\nf.\tAlter\ng.\tQuery\nh.\tEXIT\nEnter letter to choose operation: ")
 
@@ -122,39 +123,151 @@ def main():
                 print("Invalid table name.")
 
         if option == "d":
+            data_type_dict = {
+                'a': "VARCHAR(200)",
+                'b': "INT(100)",
+                'c': "CHAR(1)"
+            }
             table_name = input(
                 "Enter the name of the table you want to create: ")
             col_lst = []
+            tracker = True
+            table = table_name
             if not (table_name in tables):
-                col_name = input("Enter column name: ")
-                data_type = input(
-                    f'\na.\tVARCHAR()\nb.\tINT()\nc.\tCHAR()\nEnter a letter to select data type for column "{col_name}": ')
-                if data_type.lower() in ['a', 'b', 'c']:
-                    data_type = data_type_dict[data_type.lower()]
-                    col_lst.append(f"{col_name} {data_type}")
-                while True:
-                    dec = input(
-                        'Enter "Y" to add another column, else enter any other value: ')
-                    if not (dec.lower() == "y"):
-                        break
+                new_exist = input(
+                    'Enter "new" to create table from scratch or "existing" to create table from query: ')
+                if new_exist.lower() == 'new':
                     col_name = input("Enter column name: ")
                     data_type = input(
                         f'\na.\tVARCHAR()\nb.\tINT()\nc.\tCHAR()\nEnter a letter to select data type for column "{col_name}": ')
                     if data_type.lower() in ['a', 'b', 'c']:
                         data_type = data_type_dict[data_type.lower()]
                         col_lst.append(f"{col_name} {data_type}")
-
                     else:
                         print("Invalid selection of data type.")
+                        tracker = False
+
+                    while tracker:
+                        dec = input(
+                            'Enter "Y" to add another column, else enter any other value: ')
+                        if not (dec.lower() == "y"):
+                            break
+                        col_name = input("Enter column name: ")
+                        data_type = input(
+                            f'\na.\tVARCHAR()\nb.\tINT()\nc.\tCHAR()\nEnter a letter to select data type for column "{col_name}": ')
+                        if data_type.lower() in ['a', 'b', 'c']:
+                            data_type = data_type_dict[data_type.lower()]
+                            col_lst.append(f"{col_name} {data_type}")
+
+                        else:
+                            print("Invalid selection of data type.")
+                            tracker = False
+
+                    if tracker:
+                        col_str = f'({", ".join(col_lst)})'
+                        QueryBuilder(user, password, schema,
+                                     table_name).createFromScratch(col_str)
+                elif new_exist.lower() == 'existing':
+                    print(f"Tables in {schema}: {tables}")
+                    table_name = input(
+                        "Enter the table you would like to use to create new table: ")
+
+                    if validateTable(table_name, tables):
+                        obj = QueryBuilder(user, password, schema, table_name)
+                        column_info = obj.columnInfo()
+                        cols = [x[0] for x in column_info]
+                        print(
+                            f"\nList of columns in {table_name}: {cols}")
+                        sel_columns = input(
+                            'Enter * to select all columns or specify each column separated by spaces: ')
+                        sel_columns = sel_columns.split(" ")
+                        if sel_columns[0] == '*':
+                            sel_columns = cols
+                        act_list = []
+                        for i in sel_columns:
+                            if i in cols:
+                                act_list.append(i)
+                        if len(act_list) == len(sel_columns):
+                            where_dec = input(
+                                'Enter "Y" to add a WHERE condition, enter anything else to skip: ')
+                            condition = None
+                            if where_dec.lower() == 'y':
+                                condition = input(
+                                    "Enter a WHERE condition in the form: ColumnName = 'Column Value'\n")
+                                if (condition == None) or ((condition.split(' '))[0] in cols):
+                                    sel_columns = ", ".join(sel_columns)
+                                    query = obj.query(
+                                        sel_columns, condition, None, True)
+                                    obj.createFromTable(query, "TABLE", table)
+                                else:
+                                    print(
+                                        f"{condition.split(' ')[0]} is not a valid column in {table_name}")
+                        else:
+                            print(
+                                f"Column(s) {[x for x in sel_columns if not(x in act_list)]} are not in table {table_name}")
+                    else:
+                        print("Invalid table name.")
+
+                else:
+                    print(
+                        f'Options to create a table are "new" or "existing", the option you chose was "{new_exist}"')
 
             else:
                 print(f'Table {table_name} already exists in the database')
 
         if option == "e":
+            data_type_dict = {
+                'a': "VARCHAR(200)",
+                'b': "INT(100)",
+                'c': "CHAR(1)"
+            }
             table_name = input(
                 "Enter the name of the view you want to create: ")
+            col_lst = []
+            tracker = True
+            table = table_name
             if not (table_name in tables):
-                pass
+
+                print(f"Tables in {schema}: {tables}")
+                table_name = input(
+                    "Enter the table you would like to use to create view: ")
+
+                if validateTable(table_name, tables):
+                    obj = QueryBuilder(user, password, schema, table_name)
+                    column_info = obj.columnInfo()
+                    cols = [x[0] for x in column_info]
+                    print(
+                        f"\nList of columns in {table_name}: {cols}")
+                    sel_columns = input(
+                        'Enter * to select all columns or specify each column separated by spaces: ')
+                    sel_columns = sel_columns.split(" ")
+                    if sel_columns[0] == '*':
+                        sel_columns = cols
+                    act_list = []
+                    for i in sel_columns:
+                        if i in cols:
+                            act_list.append(i)
+                    if len(act_list) == len(sel_columns):
+                        where_dec = input(
+                            'Enter "Y" to add a WHERE condition, enter anything else to skip: ')
+                        condition = None
+                        if where_dec.lower() == 'y':
+                            condition = input(
+                                "Enter a WHERE condition in the form: ColumnName = 'Column Value'\n")
+                            if (condition == None) or ((condition.split(' '))[0] in cols):
+                                sel_columns = ", ".join(sel_columns)
+                                query = obj.query(
+                                    sel_columns, condition, None, True)
+                                obj.createFromTable(query, "VIEW", table)
+                            else:
+                                print(
+                                    f"{condition.split(' ')[0]} is not a valid column in {table_name}")
+                        else:
+                            print(
+                                f"Column(s) {[x for x in sel_columns if not(x in act_list)]} are not in table {table_name}")
+                    else:
+                        print("Invalid table name.")
+
             else:
                 print(f'View {table_name} already exists in the database')
 
@@ -259,28 +372,6 @@ def main():
                     else:
                         print(
                             f"{condition.split(' ')[0]} is not a valid column in {table_name}")
-
-                    # order_dec = input(
-                    #     'Enter "Y" to ORDER BY a particular column, enter anything else to skip: ')
-                    # if order_dec.lower() == 'y':
-                    #     order_col = input(
-                    #         "Enter an individual column or list of columns separated by spaces for which you want to order your table by: ")
-                    #     order_col = order_col.split(' ')
-                    #     not_in = []
-                    #     for i in order_col:
-                    #         if not (i in cols):
-                    #             not_in.append(i)
-                    #     if len(not_in) == 0:
-                    #         obj.query(sel_columns, condition, order_col)
-                    #     else:
-                    #         print(f"Columns {not_in} are not in {table_name}")
-
-                    #     if not (condition.split(' '))[0] in [x[0] for x in column_info]:
-                    #         print(
-                    #             f"{condition.split(' ')[0]} is not a valid column in {table_name}")
-                    #         break
-                    # else:
-                    #     condition = None
 
                 else:
                     print(
