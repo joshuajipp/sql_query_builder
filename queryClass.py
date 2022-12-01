@@ -53,16 +53,35 @@ class QueryBuilder():
             f"ALTER TABLE {self.table} DROP COLUMN {column_name}")
         self.data.commit()
 
-    def query(self, columns, condition=None, order_by=None):
+    def query(self, columns, condition=None, order_by=None, return_query_flag=False):
         tmp = self.data.cursor(buffered=True)
         select_str = f"SELECT {columns} FROM {self.table}"
         if condition != None:
             select_str += f" WHERE {condition}"
         if order_by != None:
             select_str += f" ORDER BY {order_by}"
-        select_str += ';'
+
         tmp.execute(select_str)
-        return tmp.fetchall()
+        if return_query_flag:
+            return select_str
+        else:
+            select_str += ';'
+            return tmp.fetchall()
+
+    def createFromScratch(self, columns):
+        tmp = self.data.cursor(buffered=True)
+        create_str = f"CREATE TABLE {self.table} {columns};"
+        tmp.execute(create_str)
+        self.data.commit()
+
+    def createFromTable(self, query, table_type, new_table):
+        tmp = self.data.cursor(buffered=True)
+        as_var = ''
+        if table_type.lower() == 'view':
+            as_var = 'AS'
+        create_str = f'CREATE {table_type} {new_table} {as_var} ({query});'
+        tmp.execute(create_str)
+        self.data.commit()
 
     def columnInfo(self):
         tmp = self.data.cursor(buffered=True)
