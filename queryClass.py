@@ -6,14 +6,9 @@ class QueryBuilder():
         try:
             self.data = mysql.connector.connect(
                 host="127.0.0.1", port=3306, user=username, password=pword, database=db)
-            tmp = self.data.cursor(buffered=True)
-            tmp.execute(f"SELECT * FROM {table}")
         except Exception as error:
             if f"Unknown database '{db}'" in str(error):
                 raise ValueError("Must enter valid database")
-
-            elif f"Table '{db}.{table}' doesn't exist" in str(error):
-                raise ValueError("Invalid table name")
             else:
                 raise error
 
@@ -62,10 +57,12 @@ class QueryBuilder():
         tmp = self.data.cursor(buffered=True)
         select_str = f"SELECT {columns} FROM {self.table}"
         if condition != None:
-            select_str += f"WHERE {condition}"
+            select_str += f" WHERE {condition}"
         if order_by != None:
-            select_str += f"ORDER BY {order_by}"
+            select_str += f" ORDER BY {order_by}"
+        select_str += ';'
         tmp.execute(select_str)
+        return tmp.fetchall()
 
     def columnInfo(self):
         tmp = self.data.cursor(buffered=True)
