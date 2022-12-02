@@ -1,6 +1,7 @@
 from queryClass import *
 from validate import *
 from getpass import getpass
+from displayData import *
 
 
 def main():
@@ -364,8 +365,10 @@ def main():
                             sel_columns = ", ".join(sel_columns)
                             if order_col != None:
                                 order_col = ", ".join(order_col)
-                            print(obj.query(sel_columns,
-                                            condition, order_col))
+                            rows = obj.query(sel_columns,
+                                            condition, order_col)
+                            displayTable(act_list, rows)
+                            
                         else:
                             print(f"Columns {not_in} are not in {table_name}")
 
