@@ -78,8 +78,8 @@ class QueryBuilder():
         tmp = self.data.cursor(buffered=True)
         as_var = ''
         if table_type.lower() == 'view':
-            as_var = 'AS'
-        create_str = f'CREATE {table_type} {new_table} {as_var} ({query});'
+            as_var = 'AS '
+        create_str = f'CREATE {table_type} {new_table} {as_var}({query});'
         tmp.execute(create_str)
         self.data.commit()
 
