@@ -195,14 +195,14 @@ def main():
                             if where_dec.lower() == 'y':
                                 condition = input(
                                     "Enter a WHERE condition in the form: ColumnName = 'Column Value'\n")
-                                if (condition == None) or ((condition.split(' '))[0] in cols):
-                                    sel_columns = ", ".join(sel_columns)
-                                    query = obj.query(
-                                        sel_columns, condition, None, True)
-                                    obj.createFromTable(query, "TABLE", table)
-                                else:
-                                    print(
-                                        f"{condition.split(' ')[0]} is not a valid column in {table_name}")
+                            if (condition == None) or ((condition.split(' '))[0] in cols):
+                                sel_columns = ", ".join(sel_columns)
+                                query = obj.query(
+                                    sel_columns, condition, None, True)
+                                obj.createFromTable(query, "TABLE", table)
+                            else:
+                                print(
+                                    f"{condition.split(' ')[0]} is not a valid column in {table_name}")
                         else:
                             print(
                                 f"Column(s) {[x for x in sel_columns if not(x in act_list)]} are not in table {table_name}")
