@@ -15,6 +15,17 @@ def validateCredentials(username, pword) -> bool:
     return True
 
 
+def validateSchema(user, password, schema):
+    try:
+        QueryBuilder(user, password, schema)
+    except Exception as e:
+        if "Must enter valid database" in str(e):
+            return False
+        else:
+            raise e
+    return True
+
+
 def validateOperation(option):
     operations = ["a", "b", "c", "d", "e", "f", "g", "h"]
     if option.lower() in operations:
