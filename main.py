@@ -19,12 +19,7 @@ def main():
         schema = input("Invalid database name. Enter database name: ")
 
     tables = QueryBuilder(user, password, schema).getTableNames()
-    datatype_dict = {
-        253: "Enter an alphanumeric string value: ",
-        254: "Enter a character value (e.g. M for male and F for female): ",
-        3: "Enter an integer value: ",
-        2: "Enter an integer value: "
-    }
+
     while True:
         tables = QueryBuilder(user, password, schema).getTableNames()
         option = input(
