@@ -14,19 +14,21 @@ def main():
         password = getpass("Password: ")
         valid_credentials = validateCredentials(user, password)
 
-    schema = "olympicarchery"
-    tables = QueryBuilder(user, password, schema,
-                          'participant').getTableNames()
+    schema = input("Enter database name: ")
+    while not validateSchema(user, password, schema):
+        schema = input("Invalid database name. Enter database name: ")
+
+    tables = QueryBuilder(user, password, schema).getTableNames()
     datatype_dict = {
         253: "Enter an alphanumeric string value: ",
         254: "Enter a character value (e.g. M for male and F for female): ",
-        3: "Enter an integer value: "
+        3: "Enter an integer value: ",
+        2: "Enter an integer value: "
     }
     while True:
-        tables = QueryBuilder(user, password, schema,
-                              'participant').getTableNames()
+        tables = QueryBuilder(user, password, schema).getTableNames()
         option = input(
-            "\na.\tInsert\nb.\tDelete\nc.\tUpdate\nd.\tCreate Table\ne.\t Create view\nf.\tAlter\ng.\tQuery\nh.\tEXIT\nEnter letter to choose operation: ")
+            "\na.\tInsert\nb.\tDelete\nc.\tUpdate\nd.\tCreate Table\ne.\tCreate view\nf.\tAlter\ng.\tQuery\nh.\tEXIT\nEnter letter to choose operation: ")
 
         valid_operation = validateOperation(option)
 
@@ -47,7 +49,7 @@ def main():
                     if i[2] == 0:
                         print("\n**REQUIRED FIELD**")
                     print(f'Inserting into column "{i[0]}"...')
-                    col_inp = input(f"{datatype_dict[i[1]]}")
+                    col_inp = input("Enter insert value: ")
 
                     if validateColumnInput(col_inp, i) != True:
                         print(validateColumnInput(col_inp, i))
@@ -95,7 +97,7 @@ def main():
                         if i[2] == 0:
                             print("\n**REQUIRED FIELD**")
                         print(f'Updating values in column "{i[0]}"...')
-                        col_inp = input(f"{datatype_dict[i[1]]}")
+                        col_inp = input(f"Enter update value: ")
 
                         if validateColumnInput(col_inp, i) != True:
                             print(validateColumnInput(col_inp, i))
@@ -366,9 +368,9 @@ def main():
                             if order_col != None:
                                 order_col = ", ".join(order_col)
                             rows = obj.query(sel_columns,
-                                            condition, order_col)
+                                             condition, order_col)
                             displayTable(act_list, rows)
-                            
+
                         else:
                             print(f"Columns {not_in} are not in {table_name}")
 
@@ -384,7 +386,7 @@ def main():
                 print("Invalid table name.")
 
         if option == "h":
-            print("Thankyou for using our SQL query writing program!")
+            print("Thankyou for using the SQL query writing program!")
             break
 
 
