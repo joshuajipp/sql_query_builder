@@ -2,7 +2,7 @@ import mysql.connector
 
 
 class QueryBuilder():
-    def __init__(self, username, pword, db, table):
+    def __init__(self, username, pword, db, table=None):
         try:
             self.data = mysql.connector.connect(
                 host="127.0.0.1", port=3306, user=username, password=pword, database=db)
